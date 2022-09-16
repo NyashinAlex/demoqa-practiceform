@@ -1,5 +1,6 @@
 import com.codeborne.selenide.ClickOptions;
 import com.codeborne.selenide.Configuration;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
@@ -16,7 +17,6 @@ public class PracticeFormTests {
 
         Configuration.baseUrl = "https://demoqa.com";
         Configuration.browserSize = "1920x1080";
-        Configuration.holdBrowserOpen = true;
     }
 
     @Test
@@ -33,6 +33,7 @@ public class PracticeFormTests {
         String hobbies = "Sports";
         String address = "Moscow";
         String state = "NCR";
+        String city = "Delhi";
 
         open("/automation-practice-form");
         $("#firstName").setValue(firstName);
@@ -48,6 +49,19 @@ public class PracticeFormTests {
         $(byText(hobbies)).click();
         $("input#uploadPicture").uploadFile(new File("src/test/resources/test_cat_qa.jpg"));//тут загулил, так же можно сделать?)
         $("#currentAddress").setValue(address);
-        $("#state").click();
+        $("#state").$("[autocapitalize=none]").setValue(state).pressEnter();
+        $("#city").$("[autocapitalize=none]").setValue(city).pressEnter();
+        $("#submit").click();
+
+        Assertions.assertEquals(firstName + " " + lastName, $(byText(firstName + " " + lastName)).getText());
+        Assertions.assertEquals(userEmail, $(byText(userEmail)).getText());
+        Assertions.assertEquals(gender, $(byText(gender)).getText());
+        Assertions.assertEquals(mobile, $(byText(mobile)).getText());
+        Assertions.assertEquals("07 Jul 1996", $(byText("07 Jul 1996")).getText());
+        Assertions.assertEquals(subjects, $(byText(subjects)).getText());
+        Assertions.assertEquals(hobbies, $(byText(hobbies)).getText());
+        Assertions.assertEquals("test_cat_qa.jpg", $(byText("test_cat_qa.jpg")).getText());
+        Assertions.assertEquals(address, $(byText(address)).getText());
+        Assertions.assertEquals(state + " " + city, $(byText(state + " " + city)).getText());
     }
 }
