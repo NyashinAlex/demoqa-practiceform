@@ -48,6 +48,6 @@ public class PracticeFormTests {
         $(byText(hobbies)).click();
         $("input#uploadPicture").uploadFile(new File("src/test/resources/test_cat_qa.jpg"));//тут загулил, так же можно сделать?)
         $("#currentAddress").setValue(address);
-        $("#state").click();//$("[class= css-26l3qy-menu]").click();
+        $("#state").click();
     }
 }
