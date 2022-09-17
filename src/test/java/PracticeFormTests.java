@@ -1,11 +1,11 @@
 import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.Keys;
 
 import java.io.File;
 
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -27,7 +27,9 @@ public class PracticeFormTests {
         String userEmail = "nyashin@test.com";
         String gender = "Male";
         String mobile = "8905478547";
-        String dateOfBirth = "07.07.1996";
+        String month = "July";
+        String year = "1996";
+        String day = "07";
         String subjects = "xm";
         String hobbies = "Sports";
         String address = "Moscow";
@@ -38,29 +40,30 @@ public class PracticeFormTests {
         $("#firstName").setValue(firstName);
         $("#lastName").setValue(lastName);
         $("#userEmail").setValue(userEmail);
-        $("[for=gender-radio-1]").click(); //мне не нравится этот селектор. Как по нему понять, что выбрат именно Male?
+        $("[for=gender-radio-1]").click();
         $("#userNumber").setValue(mobile);
-        $("[class=react-datepicker__input-container]")
-                .$("[id=dateOfBirthInput]")
-                .setValue(Keys.CONTROL + "a")
-                .sendKeys(dateOfBirth + Keys.ENTER);//это уж совсем костыль. Можно по-другому как-нибудь?)
+        $("#dateOfBirthInput").click();
+        $(".react-datepicker__month-select").selectOption(month);
+        $(".react-datepicker__year-select").selectOption(year);
+        $(".react-datepicker__day--007").click();
         $("#subjectsContainer").$("[autocapitalize=none]").setValue(subjects);
         $(byText(hobbies)).click();
-        $("input#uploadPicture").uploadFile(new File("src/test/resources/test_cat_qa.jpg"));//тут загулил, так же можно сделать?)
+        $("input#uploadPicture").uploadFile(new File("src/test/resources/test_cat_qa.jpg"));
         $("#currentAddress").setValue(address);
         $("#state").$("[autocapitalize=none]").setValue(state).pressEnter();
         $("#city").$("[autocapitalize=none]").setValue(city).pressEnter();
         $("#submit").click();
 
-        Assertions.assertEquals(firstName + " " + lastName, $(byText(firstName + " " + lastName)).getText());
-        Assertions.assertEquals(userEmail, $(byText(userEmail)).getText());
-        Assertions.assertEquals(gender, $(byText(gender)).getText());
-        Assertions.assertEquals(mobile, $(byText(mobile)).getText());
-        Assertions.assertEquals("07 Jul 1996", $(byText("07 Jul 1996")).getText());
-        Assertions.assertEquals(subjects, $(byText(subjects)).getText());
-        Assertions.assertEquals(hobbies, $(byText(hobbies)).getText());
-        Assertions.assertEquals("test_cat_qa.jpg", $(byText("test_cat_qa.jpg")).getText());
-        Assertions.assertEquals(address, $(byText(address)).getText());
-        Assertions.assertEquals(state + " " + city, $(byText(state + " " + city)).getText());
+        $(".table-responsive").shouldBe(visible);
+        $(".table-responsive").shouldHave(text(firstName + " " + lastName),
+                text(userEmail),
+                text(gender),
+                text(mobile),
+                text(day + " " + month + " " + year),
+                text(subjects),
+                text(hobbies),
+                text("test_cat_qa.jpg"),
+                text(address),
+                text(state + " " + city));//так можно делать? или для каждой проверки должна быть свой локатор?
     }
 }
