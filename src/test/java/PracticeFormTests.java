@@ -36,6 +36,9 @@ public class PracticeFormTests {
         String state = "NCR";
         String city = "Delhi";
 
+        //executeJavaScript("$('footer').remove()");
+        //executeJavaScript("$('#fixedban').remove()");
+
         open("/automation-practice-form");
         $("#firstName").setValue(firstName);
         $("#lastName").setValue(lastName);
@@ -64,6 +67,6 @@ public class PracticeFormTests {
                 text(hobbies),
                 text("test_cat_qa.jpg"),
                 text(address),
-                text(state + " " + city));//так можно делать? или для каждой проверки должна быть свой локатор?
+                text(state + " " + city));
     }
 }
