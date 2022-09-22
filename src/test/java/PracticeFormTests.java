@@ -13,7 +13,6 @@ public class PracticeFormTests {
 
     @BeforeAll
     static void setUp() {
-
         Configuration.baseUrl = "https://demoqa.com";
         Configuration.browserSize = "1920x1080";
     }
@@ -30,16 +29,20 @@ public class PracticeFormTests {
         String month = "July";
         String year = "1996";
         String day = "07";
-        String subjects = "xm";
+        String subjects = "Maths";
         String hobbies = "Sports";
+        String img = "test_cat_qa.jpg";
         String address = "Moscow";
         String state = "NCR";
         String city = "Delhi";
 
-        //executeJavaScript("$('footer').remove()");
-        //executeJavaScript("$('#fixedban').remove()");
-
         open("/automation-practice-form");
+        $(".practice-form-wrapper").shouldHave(text("Student Registration Form"));
+
+        executeJavaScript("$('footer').remove()");
+        executeJavaScript("$('#fixedban').remove()");
+        executeJavaScript("$('#RightSide_Advertisement').remove()");
+
         $("#firstName").setValue(firstName);
         $("#lastName").setValue(lastName);
         $("#userEmail").setValue(userEmail);
@@ -48,10 +51,11 @@ public class PracticeFormTests {
         $("#dateOfBirthInput").click();
         $(".react-datepicker__month-select").selectOption(month);
         $(".react-datepicker__year-select").selectOption(year);
-        $(".react-datepicker__day--007").click();
-        $("#subjectsContainer").$("[autocapitalize=none]").setValue(subjects);
-        $(byText(hobbies)).click();
-        $("input#uploadPicture").uploadFile(new File("src/test/resources/test_cat_qa.jpg"));
+        $(".react-datepicker__day--007:not(.react-datepicker__day--outside-month)").click();
+        $("#subjectsContainer").$("[autocapitalize=none]").setValue(subjects).pressEnter();
+        $("#hobbiesWrapper").$(byText(hobbies)).click();
+        //$("#uploadPicture").uploadFile(new File("src/test/resources/test_cat_qa.jpg"));// это второй вариант, чтобы не забыть
+        $("#uploadPicture").uploadFromClasspath(img);
         $("#currentAddress").setValue(address);
         $("#state").$("[autocapitalize=none]").setValue(state).pressEnter();
         $("#city").$("[autocapitalize=none]").setValue(city).pressEnter();
@@ -65,7 +69,7 @@ public class PracticeFormTests {
                 text(day + " " + month + " " + year),
                 text(subjects),
                 text(hobbies),
-                text("test_cat_qa.jpg"),
+                text(img),
                 text(address),
                 text(state + " " + city));
     }
